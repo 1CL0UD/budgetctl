@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as coreRouteRouteImport } from './routes/(core)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as coreIndexRouteImport } from './routes/(core)/index'
+import { Route as coreSettingsRouteImport } from './routes/(core)/settings'
 import { Route as coreProjectsRouteImport } from './routes/(core)/projects'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 
@@ -28,6 +29,11 @@ const coreIndexRoute = coreIndexRouteImport.update({
   path: '/',
   getParentRoute: () => coreRouteRoute,
 } as any)
+const coreSettingsRoute = coreSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => coreRouteRoute,
+} as any)
 const coreProjectsRoute = coreProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
@@ -42,11 +48,13 @@ const authLoginRoute = authLoginRouteImport.update({
 export interface FileRoutesByFullPath {
   '/login': typeof authLoginRoute
   '/projects': typeof coreProjectsRoute
+  '/settings': typeof coreSettingsRoute
   '/': typeof coreIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/projects': typeof coreProjectsRoute
+  '/settings': typeof coreSettingsRoute
   '/': typeof coreIndexRoute
 }
 export interface FileRoutesById {
@@ -55,19 +63,21 @@ export interface FileRoutesById {
   '/(core)': typeof coreRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(core)/projects': typeof coreProjectsRoute
+  '/(core)/settings': typeof coreSettingsRoute
   '/(core)/': typeof coreIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/projects' | '/'
+  fullPaths: '/login' | '/projects' | '/settings' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/projects' | '/'
+  to: '/login' | '/projects' | '/settings' | '/'
   id:
     | '__root__'
     | '/(auth)'
     | '/(core)'
     | '/(auth)/login'
     | '/(core)/projects'
+    | '/(core)/settings'
     | '/(core)/'
   fileRoutesById: FileRoutesById
 }
@@ -97,6 +107,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof coreIndexRouteImport
+      parentRoute: typeof coreRouteRoute
+    }
+    '/(core)/settings': {
+      id: '/(core)/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof coreSettingsRouteImport
       parentRoute: typeof coreRouteRoute
     }
     '/(core)/projects': {
@@ -130,11 +147,13 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface coreRouteRouteChildren {
   coreProjectsRoute: typeof coreProjectsRoute
+  coreSettingsRoute: typeof coreSettingsRoute
   coreIndexRoute: typeof coreIndexRoute
 }
 
 const coreRouteRouteChildren: coreRouteRouteChildren = {
   coreProjectsRoute: coreProjectsRoute,
+  coreSettingsRoute: coreSettingsRoute,
   coreIndexRoute: coreIndexRoute,
 }
 
