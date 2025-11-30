@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import {
   Card,
   CardContent,
@@ -9,15 +10,33 @@ import {
 import { ModeToggle } from "@/components/dark-mode-toggle";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
+import { apiFetch } from "@/lib/api";
+import { queryClient } from "@/lib/queryClient";
+import { useAuthStore } from "@/state/auth";
 
 export const Route = createFileRoute("/(core)/settings")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const handleLogout = () => {
-    // TODO: Implement logout logic
-    console.log("Logout clicked");
+  const router = useRouter();
+  const setUser = useAuthStore((s) => s.setUser);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await apiFetch("/auth/logout", { method: "POST" });
+    } catch (error) {
+      // Best-effort logout; still clear local state
+      console.error("Logout failed", error);
+    } finally {
+      setUser(null);
+      queryClient.removeQueries({ queryKey: ["auth"] });
+      setIsLoggingOut(false);
+      router.navigate({ to: "/login" });
+    }
   };
 
   return (
@@ -70,10 +89,11 @@ function RouteComponent() {
               <Button
                 variant="outline"
                 onClick={handleLogout}
+                disabled={isLoggingOut}
                 className="flex items-center gap-2"
               >
                 <LogOut className="h-4 w-4" />
-                Sign Out
+                {isLoggingOut ? "Signing out..." : "Sign Out"}
               </Button>
             </div>
           </CardContent>
