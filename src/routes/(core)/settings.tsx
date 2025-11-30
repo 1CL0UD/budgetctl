@@ -10,6 +10,8 @@ import {
 import { ModeToggle } from "@/components/dark-mode-toggle";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { apiFetch } from "@/lib/api";
 import { queryClient } from "@/lib/queryClient";
 import { useAuthStore } from "@/state/auth";
@@ -50,19 +52,28 @@ function RouteComponent() {
 
       <div className="space-y-6">
         {/* Theme Settings */}
-        <Card>
+        <Card className="border-border/60 bg-card/80 shadow-sm">
           <CardHeader>
-            <CardTitle>Appearance</CardTitle>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="uppercase tracking-wide">
+                Appearance
+              </Badge>
+              <span className="text-xs text-muted-foreground">
+                Theme & display
+              </span>
+            </div>
+            <CardTitle className="text-xl">Theme</CardTitle>
             <CardDescription>
-              Customize how the application looks and feels
+              Choose between light and dark theme to match your workspace.
             </CardDescription>
           </CardHeader>
+          <Separator />
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-medium">Theme</h3>
                 <p className="text-sm text-muted-foreground">
-                  Choose between light and dark theme
+                  Light, dark, or sync with your system preference.
                 </p>
               </div>
               <ModeToggle />
@@ -71,19 +82,28 @@ function RouteComponent() {
         </Card>
 
         {/* Account Settings */}
-        <Card>
+        <Card className="border-border/60 bg-card/80 shadow-sm">
           <CardHeader>
-            <CardTitle>Account</CardTitle>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="uppercase tracking-wide">
+                Account
+              </Badge>
+              <span className="text-xs text-muted-foreground">
+                Access & sessions
+              </span>
+            </div>
+            <CardTitle className="text-xl">Sign Out</CardTitle>
             <CardDescription>
-              Manage your account settings and preferences
+              Sign out of your account and return to the login screen.
             </CardDescription>
           </CardHeader>
+          <Separator />
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-medium">Sign Out</h3>
+                <h3 className="font-medium">Session</h3>
                 <p className="text-sm text-muted-foreground">
-                  Sign out of your account and return to login
+                  Clear your session and re-authenticate when you’re ready.
                 </p>
               </div>
               <Button
