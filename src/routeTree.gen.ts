@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as coreRouteRouteImport } from './routes/(core)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as coreIndexRouteImport } from './routes/(core)/index'
+import { Route as coreProjectsRouteImport } from './routes/(core)/projects'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 
 const coreRouteRoute = coreRouteRouteImport.update({
@@ -27,6 +28,11 @@ const coreIndexRoute = coreIndexRouteImport.update({
   path: '/',
   getParentRoute: () => coreRouteRoute,
 } as any)
+const coreProjectsRoute = coreProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => coreRouteRoute,
+} as any)
 const authLoginRoute = authLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -35,10 +41,12 @@ const authLoginRoute = authLoginRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/login': typeof authLoginRoute
+  '/projects': typeof coreProjectsRoute
   '/': typeof coreIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
+  '/projects': typeof coreProjectsRoute
   '/': typeof coreIndexRoute
 }
 export interface FileRoutesById {
@@ -46,14 +54,21 @@ export interface FileRoutesById {
   '/(auth)': typeof authRouteRouteWithChildren
   '/(core)': typeof coreRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
+  '/(core)/projects': typeof coreProjectsRoute
   '/(core)/': typeof coreIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/'
+  fullPaths: '/login' | '/projects' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/'
-  id: '__root__' | '/(auth)' | '/(core)' | '/(auth)/login' | '/(core)/'
+  to: '/login' | '/projects' | '/'
+  id:
+    | '__root__'
+    | '/(auth)'
+    | '/(core)'
+    | '/(auth)/login'
+    | '/(core)/projects'
+    | '/(core)/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -84,6 +99,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreIndexRouteImport
       parentRoute: typeof coreRouteRoute
     }
+    '/(core)/projects': {
+      id: '/(core)/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof coreProjectsRouteImport
+      parentRoute: typeof coreRouteRoute
+    }
     '/(auth)/login': {
       id: '/(auth)/login'
       path: '/login'
@@ -107,10 +129,12 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 )
 
 interface coreRouteRouteChildren {
+  coreProjectsRoute: typeof coreProjectsRoute
   coreIndexRoute: typeof coreIndexRoute
 }
 
 const coreRouteRouteChildren: coreRouteRouteChildren = {
+  coreProjectsRoute: coreProjectsRoute,
   coreIndexRoute: coreIndexRoute,
 }
 
